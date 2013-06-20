@@ -8,4 +8,4 @@ class HelloController(BaseController):
         return Response('witam grzyba;>')
 
     def serverinfo(self):
-        return render('/szablon.txt')
+        return render_response('/szablon.txt')
