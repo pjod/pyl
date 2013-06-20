@@ -2,9 +2,12 @@
 import projekt1.lib.helpers as h
 
 from pylons import request, response, session, tmpl_context as c, url
-from pylons.controllers.util import abort, redirect
+#from pylons.controllers.util import abort, redirect
+from pylons.decorators import validate
 #from routes import url_for
 from projekt1.lib.base import BaseController, render
+from projekt1.model.form import RegisterForm
+
 
 #from projekt1.lib.base import *
 
@@ -22,6 +25,21 @@ class EhlouController(BaseController):
         c.name = "blablabla"
         return render('pierwszy.mako')
 
+    def register(self):
+        return render('register.mako')
+
+    @validate(schema=RegisterForm(), form="register")
+    def create(self):
+        c.login = request.POST['login']
+        c.email = request.POST['email']
+        c.password = request.POST['password']
+        c.password_confirmation = request.POST['password_confirmation']
+        return render('create.mako')
+
+
+
+
+
     def aj(environ, start_response):
         start_response('200 OK', [('Content-type', 'text/html')])
         return ['<html><body>dupa:></body></html>']
@@ -38,13 +56,3 @@ class EhlouController(BaseController):
             result += '%s: %r <br />' % (key, value)
         result += '</body></html>'
         return result
-
-    def moj(self):
-        return h.url_for(controller='projekt1', action='view', id=1)
-
-    def test_abort(self):
-        username = request.environ.get('REMOTE_USER')
-        if not username:
-            abort(401)
-        else:
-            return "Hello %s" % username
